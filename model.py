@@ -134,43 +134,6 @@ class ConfidenceSelector(nn.Module):
         
         # 软选择时仍保留梯度传播路径
         return torch.matmul(weights, path_embeds)  # [hidden_size]
-
-class Gate(nn.Module):
-    def __init__(self, hidden_size, attention_hidden_size):
-        super(Gate, self).__init__()
-        # 以head、tail和path embedding拼接后的向量作为输入，输出单个权重
-        self.attention_mlp = nn.Sequential(
-            nn.Linear(hidden_size * 3, attention_hidden_size),
-            nn.ReLU(),
-            nn.Linear(attention_hidden_size, 1)
-        )
-    
-    def forward(self, head_embedding, tail_embedding, path_embeddings):
-        '''
-        head_embedding: tensor of shape [hidden_size]
-        tail_embedding: tensor of shape [hidden_size]
-        path_embeddings: tensor of shape [seq_len, hidden_size]
-        '''
-
-        seq_len = path_embeddings.size(0)
-
-        # 扩展head和tail embeddings以匹配seq_len
-        head_expanded = head_embedding.unsqueeze(0).expand(seq_len, -1)  # [seq_len, hidden_size]
-        tail_expanded = tail_embedding.unsqueeze(0).expand(seq_len, -1)  # [seq_len, hidden_size]
-
-        # 拼接 [head_embedding; path_embedding; tail_embedding]
-        combined = torch.cat([head_expanded, path_embeddings, tail_expanded], dim=-1)  # [seq_len, hidden_size*3]
-
-        # 计算未归一化的注意力权重
-        unnormalized_weights = self.attention_mlp(combined).squeeze(-1)  # [seq_len]
-
-        # 归一化权重
-        attention_weights = F.softmax(unnormalized_weights, dim=0)  # [seq_len]
-
-        # 根据权重聚合path embeddings
-        aggregated_embedding = torch.sum(path_embeddings * attention_weights.unsqueeze(-1), dim=0)  # [hidden_size]
-
-        return aggregated_embedding, attention_weights
         
 # without layer_norm, with dropout, with edge_fusion
 class RE(nn.Module):
