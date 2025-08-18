@@ -1,0 +1,12 @@
+{
+    "docred" : {
+        "train" : "train_annotated.json",
+        "dev" : "dev.json",
+        "test" : "test.json"
+    },
+    "re-docred" : {
+        "train" : "train_revised.json",
+        "dev" : "dev_revised.json",
+        "test" : "test_revised.json"
+    }
+}

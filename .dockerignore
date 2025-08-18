@@ -1,0 +1,40 @@
+# Python 缓存文件
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 虚拟环境目录
+venv/
+.venv/
+env/
+.env/
+
+# Git 和版本控制
+.git/
+
+# IDE 配置
+.vscode/
+.idea/
+
+# 构建和分发产物
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# 测试和覆盖率
+.pytest_cache/
+.coverage
+htmlcov/
+
+# 日志与临时文件
+*.log
+*.tmp
+
+# 本地环境配置（可选择性保留模板）
+.env
+
+# 其他不需要的文件
+.DS_Store
+Thumbs.db

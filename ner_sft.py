@@ -1,0 +1,49 @@
+import json
+import argparse
+import os
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--dataset", type=str, default="docred")
+    parser.add_argument("--dataset_type", type=str, default="dev")
+    parser.add_argument("--teacher_model", type=str, default="deepseek-chat")
+
+    args = parser.parse_args()
+    dataset = args.dataset
+    dataset_type = args.dataset_type
+    teacher_model = args.teacher_model
+
+    dataset_name = json.load(open("./dataset_name.json", "r"))
+    data_file = dataset_name[dataset][dataset_type]
+
+    original_data = json.load(open(f"./dataset/{dataset}/data/{data_file}", "r", encoding="utf-8"))
+    teacher_data = json.load(open(f"./teacher_output/{teacher_model}/{dataset}/entity_description_{dataset_type}.json"))
+
+    prompt = open("./prompt/prompt_entity_extraction.md").read()
+
+    out = []
+
+    for i, item in enumerate(original_data):
+        text = ""
+        for sent in item["sents"]:
+            text += " ".join(sent)
+        
+        descs = teacher_data[i]["entity_descriptions"]
+        _descs = []
+        for j, desc in enumerate(descs):
+            pattern = r"<e>(.*?)</e>"
+            mentions = []
+            for m in item["vertexSet"][j]:
+                if m["name"] not in mentions:
+                    mentions.append(m["name"])
+            # matches = re.findall(pattern, desc["description"], re.DOTALL)[0].strip()
+            _descs.append({"entity_id" : desc["entity_id"], "mentions" : mentions, "description" : desc["description"]})
+        out.append({"instruction" : prompt, "input" : text, "output" : "```json\n" + json.dumps(_descs, ensure_ascii=False) + "```"})
+
+    os.makedirs(f"./fine_tuning_for_description_extraction/{teacher_model}/{dataset}", exist_ok=True)    
+    with open(f"./fine_tuning_for_description_extraction/{teacher_model}/{dataset}/ner_sft_{dataset_type}.json", "w", encoding="utf-8") as f:
+        json.dump(out, f, indent=4, ensure_ascii=False)
+        # print("save success")
+    
+    
+    

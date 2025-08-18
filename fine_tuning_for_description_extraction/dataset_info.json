@@ -1,0 +1,5 @@
+{
+    "deepseek-chat-docred-train":{
+        "file_name" : "./deepseek-chat/docred/ner_sft_train.json"
+    }
+}
