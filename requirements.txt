@@ -6,4 +6,3 @@ scikit_learn==1.7.1
 torch==2.7.1
 tqdm==4.67.1
 transformers==4.48.3
-llamafactory==0.9.3
