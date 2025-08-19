@@ -44,6 +44,13 @@ if __name__ == "__main__":
     with open(f"./fine_tuning_for_description_extraction/{teacher_model}/{dataset}/ner_sft_{dataset_type}.json", "w", encoding="utf-8") as f:
         json.dump(out, f, indent=4, ensure_ascii=False)
         # print("save success")
+    with open(f"./fine_tuning_for_description_extraction/dataset_info.json", "r", encoding="utf-8") as f:
+        dataset_info = json.load(f)
+
+    dataset_info[f"{teacher_model}-{dataset}-{dataset_type}"] = {"file_name" : f"./{teacher_model}/{dataset}/ner_sft_{dataset_type}.json"}
+
+    with open(f"./fine_tuning_for_description_extraction/dataset_info.json", "w", encoding="utf-8") as f:
+        json.dump(dataset_info, f, ensure_ascii=False, indent=4)
     
     
     
