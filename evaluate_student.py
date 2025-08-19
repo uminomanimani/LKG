@@ -228,7 +228,7 @@ if __name__ == "__main__":
     train_file = dataset_name[dataset]["train"]
     
     evaluate_type = dev_or_test
-    dev_file = f"{evaluate_type}_revised.json"
+    dev_file = dataset_name[dataset][dev_or_test]
     output_path = f"./student_output/{teacher_model}/{dataset}/{dev_or_test}/{student_model}"
     
     with open(f"{output_path}/graph.json", "r", encoding="utf-8") as f:
