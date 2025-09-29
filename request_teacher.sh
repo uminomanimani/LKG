@@ -8,13 +8,13 @@ dataset_types=("train" "dev" "test")
 
 for dataset_type in "${dataset_types[@]}"; do
     # request entity descriptions via teacher model, to which the entities are visible
-    python request_entity_description.py \
+    python request_entity_description_multithread.py \
         --teacher_model "${teacher_model}" \
         --dataset "${dataset}" \
         --n_threads "${n_threads}" \
         --dataset_type "${dataset_type}"
 
-    # generate alpaca format for supervised fine-tuning
+    # generate alpaca format for supervised fine-tuning, where the entities are invisible
     python ner_sft.py \
         --teacher_model "${teacher_model}" \
         --dataset "${dataset}" \

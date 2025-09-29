@@ -1,5 +1,11 @@
 {
-    "deepseek-chat-docred-train":{
-        "file_name" : "./deepseek-chat/docred/ner_sft_train.json"
+    "gpt-4o-mini-docred-train": {
+        "file_name": "./gpt-4o-mini/docred/ner_sft_train.json"
+    },
+    "gpt-4o-mini-docred-dev": {
+        "file_name": "./gpt-4o-mini/docred/ner_sft_dev.json"
+    },
+    "gpt-4o-mini-docred-test": {
+        "file_name": "./gpt-4o-mini/docred/ner_sft_test.json"
     }
 }

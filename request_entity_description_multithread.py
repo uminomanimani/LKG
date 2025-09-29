@@ -7,6 +7,7 @@ import json_repair
 from threading import Semaphore
 import os
 import argparse
+from dotenv import load_dotenv
 
 def request_api(api_key: str, prompt, model: str, previous_response: str = None):
     client = OpenAI(
@@ -180,13 +181,15 @@ if __name__ == "__main__":
     dataset_name = json.load(open("./dataset_name.json", "r"))
     data_file = dataset_name[dataset][dataset_type]
 
+    load_dotenv()
     API_KEY =  os.environ.get("API_KEY")
+    print(API_KEY)
     prompt_path = "./prompt/prompt_entity_description.md"
     with open(prompt_path, "r", encoding="utf-8") as f:
         prompt = f.read()
-    data_path = f"./dataset/{dataset}/data/{data_file}.json"
+    data_path = f"./dataset/{dataset}/data/{data_file}"
     with open(data_path, "r", encoding="utf-8") as f:
-        data_array = json.load(f)
+        data_array = json.load(f)[0:10]
     
     output = multithreaded_request(
         data_array=data_array,

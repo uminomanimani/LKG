@@ -206,8 +206,11 @@ if __name__ == "__main__":
     dataset = args.dataset
     dataset_type = args.dataset_type
 
+    dataset_name = json.load(open("./dataset_name.json", "r"))
+    data_file = dataset_name[dataset][dataset_type]
+
     request_data = read_json(f"./teacher_output/{teacher_model}/{dataset}/entity_description_{dataset_type}.json")
-    original_data = read_json(f"./dataset/{dataset}/data/{dataset_type}.json")
+    original_data = read_json(f"./dataset/{dataset}/data/{data_file}")
     output_path = f"./teacher_output/{teacher_model}/{dataset}/{dataset_type}_graph.json"
     output = []
     for count, item in enumerate(request_data):

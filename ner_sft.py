@@ -23,6 +23,9 @@ if __name__ == "__main__":
 
     out = []
 
+    teacher_len = len(teacher_data)
+    original_data = original_data[0:teacher_len]
+
     for i, item in enumerate(original_data):
         text = ""
         for sent in item["sents"]:
@@ -43,9 +46,12 @@ if __name__ == "__main__":
     os.makedirs(f"./fine_tuning_for_description_extraction/{teacher_model}/{dataset}", exist_ok=True)    
     with open(f"./fine_tuning_for_description_extraction/{teacher_model}/{dataset}/ner_sft_{dataset_type}.json", "w", encoding="utf-8") as f:
         json.dump(out, f, indent=4, ensure_ascii=False)
-        # print("save success")
-    with open(f"./fine_tuning_for_description_extraction/dataset_info.json", "r", encoding="utf-8") as f:
-        dataset_info = json.load(f)
+    
+    if os.path.exists(f"./fine_tuning_for_description_extraction/dataset_info.json"):
+        with open(f"./fine_tuning_for_description_extraction/dataset_info.json", "r", encoding="utf-8") as f:
+            dataset_info = json.load(f)
+    else:
+        dataset_info = {}
 
     dataset_info[f"{teacher_model}-{dataset}-{dataset_type}"] = {"file_name" : f"./{teacher_model}/{dataset}/ner_sft_{dataset_type}.json"}
 

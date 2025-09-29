@@ -4,7 +4,7 @@ teacher_output/
 student_output/
 graph_model_checkpoints/
 fine_tuning_for_description_extraction/*
-!fine_tuning_for_description_extraction/dataset_info.json
+# !fine_tuning_for_description_extraction/dataset_info.json
 dataset/*
 !dataset/.gitkeep
 
