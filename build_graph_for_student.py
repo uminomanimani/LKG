@@ -202,10 +202,10 @@ def build_graph(entities, all_mentions):
 
 if __name__ == "__main__":
     argparse = argparse.ArgumentParser()
-    argparse.add_argument("--teacher_model", type=str, default="deepseek-chat", help="The teacher model which have guided the student.")
+    argparse.add_argument("--teacher_model", type=str, default="gpt-4o-mini", help="The teacher model which have guided the student.")
     argparse.add_argument("--student_model", type=str, default="chatglm3-6b", help="The student model which outputs the entity descriptions.")
     argparse.add_argument("--dataset", type=str, default="docred", help="The dataset to use.")
-    argparse.add_argument("--dev_or_test", type=str, default="test", help="The dataset to use, dev or test.")
+    argparse.add_argument("--dev_or_test", type=str, default="dev", help="The dataset to use, dev or test.")
     
     args = argparse.parse_args()
 
@@ -214,7 +214,7 @@ if __name__ == "__main__":
     dataset = args.dataset
     dev_or_test = args.dev_or_test
 
-    path = f"./student_output/{teacher_model}/{dataset}/{dev_or_test}/{student_model}"
+    path = f"./saves/{teacher_model}/{dataset}/student_output/{student_model}/{dev_or_test}"
     request_data = read_json(f"{path}/entity_description.json")
     output_path = f"{path}/graph.json"
     output = []

@@ -205,9 +205,9 @@ def to_official(model, graph, label_to_id : dict, path, dev_file, num_labels=3):
 if __name__ == "__main__":
     argparse = argparse.ArgumentParser()
     argparse.add_argument("--teacher_model", type=str, default="gpt-4o-mini", help="The teacher model used.")
-    argparse.add_argument("--student_model", type=str, default="mistral-7b", help="The student model used.")
-    argparse.add_argument("--dataset", type=str, default="re-docred", help="The dataset to use.")
-    argparse.add_argument("--dev_or_test", type=str, default="test", help="The dataset to evaluate, dev or test.")
+    argparse.add_argument("--student_model", type=str, default="chatglm3-6b", help="The student model used.")
+    argparse.add_argument("--dataset", type=str, default="docred", help="The dataset to use.")
+    argparse.add_argument("--dev_or_test", type=str, default="dev", help="The dataset to evaluate, dev or test.")
     argparse.add_argument("--local_eval", type=bool, default=True, help="If True, evaluate locally, otherwise save the result to file and upload to the server.")
     argparse.add_argument("--max_hop", type=int, default=3, help="The maximum hop to use for path finding.")
     
@@ -229,7 +229,7 @@ if __name__ == "__main__":
     
     evaluate_type = dev_or_test
     dev_file = dataset_name[dataset][dev_or_test]
-    output_path = f"./student_output/{teacher_model}/{dataset}/{dev_or_test}/{student_model}"
+    output_path = f"./saves/{teacher_model}/{dataset}/student_output/{student_model}/{dev_or_test}"
     
     with open(f"{output_path}/graph.json", "r", encoding="utf-8") as f:
         graph = json.load(f)
@@ -245,7 +245,7 @@ if __name__ == "__main__":
     tokenizer.add_special_tokens(special_tokens)
     bert_model.resize_token_embeddings(len(tokenizer))
     model = RE(bert_model=bert_model, tokenizer=tokenizer, max_hop=max_hop, num_labels=97)
-    model.load_state_dict(torch.load(f"graph_model_checkpoints/{teacher_model}/{dataset}/checkpoint.pth"))
+    model.load_state_dict(torch.load(f"./saves/{teacher_model}/{dataset}/graph_model_checkpoints/checkpoint.pth"))
     model = model.to(device)
     
     triples_res = to_official(model, graph, label_to_id, path=dataset_path, dev_file=dev_file, num_labels=3)

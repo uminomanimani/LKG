@@ -42,10 +42,10 @@ def check_and_renumber_entities(entities):
 if __name__ == "__main__":
     output = []
     parser = argparse.ArgumentParser()
-    parser.add_argument("--teacher_model", type=str, default="deepseek-chat", help="The teacher model to use for training.")
+    parser.add_argument("--teacher_model", type=str, default="gpt-4o-mini", help="The teacher model to use for training.")
     parser.add_argument("--student_model", type=str, default="chatglm3-6b", help="The student model to use for training.")
     parser.add_argument("--dataset", type=str, default="docred", help="The dataset to use.")
-    parser.add_argument("--dev_or_test", type=str, default="test", help="The dataset to use, dev or test.")
+    parser.add_argument("--dev_or_test", type=str, default="dev", help="The dataset to use, dev or test.")
     
     args = parser.parse_args()
     teacher_model = args.teacher_model
@@ -53,7 +53,7 @@ if __name__ == "__main__":
     dataset = args.dataset
     dev_or_test = args.dev_or_test
 
-    path = f"./student_output/{teacher_model}/{dataset}/{dev_or_test}/{student_model}"
+    path = f"./saves/{teacher_model}/{dataset}/student_output/{student_model}/{dev_or_test}"
     with open(f"{path}/generated_predictions.jsonl", "r", encoding="utf-8") as f:
         for i, line in enumerate(f):
             json_data = json.loads(line)

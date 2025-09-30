@@ -12,6 +12,8 @@ import argparse
 
 
 if __name__ == "__main__":
+    if not torch.cuda.is_available():
+        raise EnvironmentError("GPU device not found!")
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="docred", help="The dataset to use.")
     parser.add_argument("--max_hop", type=int, default=2, help="The maximum hop for the model.")
@@ -26,7 +28,7 @@ if __name__ == "__main__":
     parser.add_argument("--min_lr", type=float, default=5e-7, help="Minimum learning rate for the scheduler.")
     args = parser.parse_args()
 
-    dataset_config = json.load(open(f"./dataset_config.json", "r"))
+    dataset_config = json.load(open(f"./dataset_name.json", "r"))
     train_file = dataset_config[args.dataset]["train"] # train_annotated.json or train_revised.json
     dev_file = dataset_config[args.dataset]["dev"]
 
@@ -42,7 +44,7 @@ if __name__ == "__main__":
     decay_factor = args.decay_factor
     min_lr = args.min_lr
 
-    graph_path = f"./teacher_output/{teacher_model}/{dataset}"
+    graph_path = f"./saves/{teacher_model}/{dataset}/teacher_output"
     dataset_path = f"./dataset/{dataset}/data"
     
     with open(f"{graph_path}/train_graph.json", "r", encoding="utf-8") as f:
@@ -98,7 +100,7 @@ if __name__ == "__main__":
     print(f"total_steps : {total_steps}, \nwarmup_steps : {warmup_steps}, \nmax_hop : {max_hop}, \nmax_grad_norm : {max_grad_norm}, \naccumulation_steps : {accumulation_steps}, \nmax_lr : {lr}")
     
     best_f1 = 0
-    save_dir = f'./graph_model_checkpoints/{teacher_model}/{dataset}'
+    save_dir = f'./saves/{teacher_model}/{dataset}/graph_model_checkpoints'
     os.makedirs(save_dir, exist_ok=True)
     history_epochs = []
 
@@ -169,11 +171,12 @@ if __name__ == "__main__":
         eval_history.append(result)
         scheduler.decay_if_warmup_and_maintein_finished(f1)
         
-        if f1 > best_f1:    
+        if f1 >= best_f1:    
             best_f1 = f1
-            if os.path.isfile(f"./{save_dir}/checkpoint.pth"):
-                os.remove(f"./{save_dir}/checkpoint.pth")
-            torch.save(model.state_dict(), f"./{save_dir}/checkpoint.pth")
+            print(f"f1 : {f1}, best_f1 : {best_f1}")
+            if os.path.isfile(f"{save_dir}/checkpoint.pth"):
+                os.remove(f"{save_dir}/checkpoint.pth")
+            torch.save(model.state_dict(), f"{save_dir}/checkpoint.pth")
             history_epochs.append(epoch)
             
         

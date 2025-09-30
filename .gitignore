@@ -7,6 +7,8 @@ fine_tuning_for_description_extraction/*
 # !fine_tuning_for_description_extraction/dataset_info.json
 dataset/*
 !dataset/.gitkeep
+saves/
+train.json
 
 
 # Byte-compiled / optimized / DLL files

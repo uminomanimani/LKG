@@ -1,12 +1,12 @@
 CUDA_VISIBLE_DEVICES=0 llamafactory-cli train \
     --stage sft \
     --do_train \
-    --model_name_or_path you_path_to_student \ 
-    --dataset deepseek-chat-docred-train \
-    --dataset_dir fine_tuning_for_description_extraction \
+    --model_name_or_path /mnt/HDD/mlk_workspace/chatglm3-6b \
+    --dataset train \
+    --dataset_dir ./saves/gpt-4o-mini/docred/fine_tuning_for_description_extraction \
     --template chatglm3 \
     --finetuning_type lora \
-    --output_dir ./saves/chatglm3-6b \
+    --output_dir ./saves/gpt-4o-mini/docred/student_model_checkpoints/chatglm3-6b \
     --overwrite_cache \
     --overwrite_output_dir \
     --cutoff_len 8192 \
@@ -17,7 +17,7 @@ CUDA_VISIBLE_DEVICES=0 llamafactory-cli train \
     --lr_scheduler_type cosine \
     --logging_steps 50 \
     --save_strategy epoch \
-    --num_train_epochs 8 \
+    --num_train_epochs 1 \
     --learning_rate 2e-4 \
     --warmup_ratio 0.03 \
     --val_size 0 \

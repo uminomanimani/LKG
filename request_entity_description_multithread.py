@@ -168,7 +168,7 @@ def multithreaded_request(
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=str, default="docred", help="The dataset to use.")
-    parser.add_argument("--teacher_model", type=str, default="deepseek-chat", help="The teacher model to use for requesting entity descriptions.")
+    parser.add_argument("--teacher_model", type=str, default="gpt-4o-mini", help="The teacher model to use for requesting entity descriptions.")
     parser.add_argument("--dataset_type", type=str, default="test", help="The dataset type to use, train, dev or test.")
     parser.add_argument("--n_threads", type=int, default=32, help="Number of threads to use for multithreading.")
     args = parser.parse_args()
@@ -182,14 +182,15 @@ if __name__ == "__main__":
     data_file = dataset_name[dataset][dataset_type]
 
     load_dotenv()
-    API_KEY =  os.environ.get("API_KEY")
-    print(API_KEY)
+    API_KEY = os.environ.get("API_KEY")
+    print(f"Requesting entity descriptions using model: {teacher_model} on dataset: {dataset} ({dataset_type}) with {n_threads} threads.", flush=True)
+    print(f"This may be expensive. Ensure you have sufficient quota.", flush=True)
     prompt_path = "./prompt/prompt_entity_description.md"
     with open(prompt_path, "r", encoding="utf-8") as f:
         prompt = f.read()
     data_path = f"./dataset/{dataset}/data/{data_file}"
     with open(data_path, "r", encoding="utf-8") as f:
-        data_array = json.load(f)[0:10]
+        data_array = json.load(f)
     
     output = multithreaded_request(
         data_array=data_array,
@@ -204,8 +205,8 @@ if __name__ == "__main__":
     for i, item in enumerate(output):
         output_data.append({"text_id" : i, "entity_descriptions" : item})
     
-    os.makedirs(f"./teacher_output/{teacher_model}/{dataset}", exist_ok=True)
-    with open(f"./teacher_output/{teacher_model}/{dataset}/entity_description_{dataset_type}.json", "w", encoding="utf-8") as f:
+    os.makedirs(f"./saves/{teacher_model}/{dataset}/teacher_output/", exist_ok=True)
+    with open(f"./saves/{teacher_model}/{dataset}/teacher_output/entity_description_{dataset_type}.json", "w", encoding="utf-8") as f:
         json.dump(output_data, f, indent=4, ensure_ascii=False)
     
  
