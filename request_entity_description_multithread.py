@@ -117,7 +117,8 @@ def request_description(data, prompt, api_key, model, alter_model):
 
                     previous_response = llm_output_str
                 else:
-                    print("Exceeded max steps in response loop.", flush=True)
+                    pass
+                    # print("Exceeded max steps in response loop.", flush=True)
                     # break
 
                 # 解析模型输出
@@ -128,10 +129,10 @@ def request_description(data, prompt, api_key, model, alter_model):
                     break  # 成功，退出 retry 循环
                 else:
                     request_model = alter_model
-                    print("Switched to alternate model. Sleeping to prevent congestion.", flush=True)
+                    # print("Switched to alternate model. Sleeping to prevent congestion.", flush=True)
                     sleep(3.0)
             except APIConnectionError:
-                print("API connection error. Retrying after short sleep.", flush=True)
+                # print("API connection error. Retrying after short sleep.", flush=True)
                 sleep(3.0)
 
         return llm_output_json if llm_output_json is not None else []
